@@ -5,7 +5,7 @@ import datetime
 def get_redcap_record():
     pass
 
-def summarize_enrolment(start_date, end_date, redcap_df):
+def summarize_enrolment_date(start_date, end_date, redcap_df):
     summary_dict = {}
 
     redcap_df = redcap_df.replace("Consent not completed", np.NaN)
@@ -36,7 +36,7 @@ def summarize_enrolment_total():
     rows_list = []
     while (start_date <= today):
         rows_list.append(
-            summarize_enrolment(start_date, start_date+delta, redcap_df)
+            summarize_enrolment_date(start_date, start_date+delta, redcap_df)
         )
         start_date += delta
     df = pd.DataFrame(rows_list)
