@@ -46,4 +46,4 @@ def summarize_enrolment_total():
     df = df.astype({col: int for col in df.columns[1:]})
     df.iloc[len(df.index)-1, 0] = 'Total'
         
-    df.to_csv('summary.csv', index=False)
+    df.to_csv('OBRI Consent Summary.csv', index=False)
