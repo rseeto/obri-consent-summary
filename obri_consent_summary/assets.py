@@ -14,7 +14,7 @@ def summarize_enrolment_date(start_date, end_date, redcap_df):
         & (pd.to_datetime(redcap_df['summary_consent_date']) < str(end_date))
     ]
     
-    summary_dict['period'] = str(start_date) + ' - ' + str(end_date)
+    summary_dict['period'] = str(start_date) + ' - ' + str(end_date-datetime.timedelta(days=1))
     summary_dict['consent'] = sum(redcap_date['consent_obtained'] == 1)
     
     for rider_type in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']:
