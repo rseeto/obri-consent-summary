@@ -24,17 +24,10 @@ def summarize_enrolment_date(start_date, end_date, redcap_df):
 
     return summary_dict
 
-def summarize_enrolment_total():
+def summarize_enrolment_total(start_date, end_date, delta, redcap_df):
     
-    # initialize with the date we started consenting
-    start_date = datetime.date(2023, 9, 11)
-    today = datetime.date.today()
-    delta = datetime.timedelta(days=7)
-
-    redcap_df = get_redcap_record()
-
     rows_list = []
-    while (start_date <= today):
+    while (start_date <= end_date):
         rows_list.append(
             summarize_enrolment_date(start_date, start_date+delta, redcap_df)
         )
@@ -45,5 +38,17 @@ def summarize_enrolment_total():
     df.loc[len(df.index)] = df.sum(numeric_only=True)
     df = df.astype({col: int for col in df.columns[1:]})
     df.iloc[len(df.index)-1, 0] = 'Total'
-        
-    df.to_csv('OBRI Consent Summary.csv', index=False)
+    
+    return df
+
+def summarize_enrolment():
+    # initialize with the date we started consenting
+    start_date = datetime.date(2023, 9, 11)
+    today = datetime.date.today()
+    delta = datetime.timedelta(days=7)
+
+    redcap_df = get_redcap_record()
+
+    summarize_enrolment = summarize_enrolment_total(start_date, today, delta, redcap_df)
+
+    summarize_enrolment.to_csv('OBRI Consent Summary.csv', index=False)
