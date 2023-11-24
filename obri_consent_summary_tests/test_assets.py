@@ -97,20 +97,20 @@ param_summarize_enrolment_date = [
 ]
 
 @pytest.mark.parametrize(
-    'start_date, end_date, input_df, expected_dict', 
+    'start_date_1, end_date_1, input_df_1, expected_dict_1', 
     param_summarize_enrolment_date
 )
 
 def test_summarize_enrolment_date(
-    start_date, end_date, input_df, expected_dict
+    start_date_1, end_date_1, input_df_1, expected_dict_1
 ):
     """Test access.summarize_enrolment_date"""
 
     actual = summarize_enrolment_date(
-        start_date, end_date, input_df
+        start_date_1, end_date_1, input_df_1
     )
     
-    assert(actual == expected_dict)
+    assert(actual == expected_dict_1)
 
 param_summarize_enrolment_total = [
     (
