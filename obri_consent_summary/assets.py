@@ -73,4 +73,4 @@ def summarize_enrolment():
 
     summarize_enrolment = summarize_enrolment_total(start_date, today, delta, redcap_df)
 
-    summarize_enrolment.to_csv('OBRI Consent Summary.csv', index=False)
+    summarize_enrolment.to_csv('data/OBRI Consent Summary.csv', index=False)
