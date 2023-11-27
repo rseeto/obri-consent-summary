@@ -3,10 +3,12 @@ import pandas as pd
 import datetime
 import requests
 import io
+from dagster import asset, op
 
-def get_redcap_record(token):
+@asset
+def get_redcap_record():
     data = {
-        'token': token,
+        'token': ,
         'content': 'record',
         'action': 'export',
         'format': 'csv',
@@ -27,6 +29,7 @@ def get_redcap_record(token):
 
     return redcap_df
 
+@op
 def summarize_enrolment_date(start_date, end_date, redcap_df):
     summary_dict = {}
 
@@ -46,6 +49,7 @@ def summarize_enrolment_date(start_date, end_date, redcap_df):
 
     return summary_dict
 
+@op
 def summarize_enrolment_total(start_date, end_date, delta, redcap_df):
     
     rows_list = []
@@ -63,14 +67,13 @@ def summarize_enrolment_total(start_date, end_date, delta, redcap_df):
     
     return df
 
-def summarize_enrolment():
+@asset
+def summarize_enrolment(get_redcap_record):
     # initialize with the date we started consenting
     start_date = datetime.date(2023, 9, 11)
     today = datetime.date.today()
     delta = datetime.timedelta(days=7)
 
-    redcap_df = get_redcap_record()
-
-    summarize_enrolment = summarize_enrolment_total(start_date, today, delta, redcap_df)
+    summarize_enrolment = summarize_enrolment_total(start_date, today, delta, get_redcap_record)
 
     summarize_enrolment.to_csv('data/OBRI Consent Summary.csv', index=False)
