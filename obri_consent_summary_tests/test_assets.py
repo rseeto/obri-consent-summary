@@ -145,6 +145,72 @@ param_summarize_enrolment_total = [
                 'rider h': pd.Series([2, 2, 4], dtype=np.int32)
             }
         )
+    ),
+    (
+        datetime.date(2023, 9, 11),
+        datetime.date(2023, 9, 24),
+        datetime.timedelta(days=7),
+        pd.DataFrame(
+            {
+                'summary_consent_date': ['2023-09-11', "Consent not completed", '2023-09-18', '2023-09-18', '2023-09-18'],
+                'consent_obtained': [1, 0, 1, 1, 1],
+                'summary_event_a': [1, 0, 1, 1, 1],
+                'summary_event_b': [1, 0, 0, 1, 1],
+                'summary_event_c': [1, 0, 0, 1, 1],
+                'summary_event_d': [1, 0, 0, 1, 1],
+                'summary_event_e': [1, 0, 0, 1, 1],
+                'summary_event_f': [1, 0, 0, 1, 1],
+                'summary_event_g': [1, 0, 0, 1, 1],
+                'summary_event_h': [1, 0, 0, 1, 1]
+            }
+        ),
+        pd.DataFrame(
+            {
+                'period': pd.Series(['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'], dtype='object'),
+                'consent': pd.Series([1, 3, 4], dtype=np.int32),
+                'rider a': pd.Series([1, 3, 4], dtype=np.int32),
+                'rider b': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider c': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider d': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider e': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider f': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider g': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider h': pd.Series([1, 2, 3], dtype=np.int32)
+            }
+        )
+    ),
+    (
+        datetime.date(2023, 9, 11),
+        datetime.date(2023, 9, 24),
+        datetime.timedelta(days=7),
+        pd.DataFrame(
+            {
+                'summary_consent_date': ['2023-09-11', np.nan, '2023-09-18', '2023-09-18', '2023-09-18'],
+                'consent_obtained': [1, 0, 1, 1, 1],
+                'summary_event_a': [1, 0, 1, 1, 1],
+                'summary_event_b': [1, 0, 0, 1, 1],
+                'summary_event_c': [1, 0, 0, 1, 1],
+                'summary_event_d': [1, 0, 0, 1, 1],
+                'summary_event_e': [1, 0, 0, 1, 1],
+                'summary_event_f': [1, 0, 0, 1, 1],
+                'summary_event_g': [1, 0, 0, 1, 1],
+                'summary_event_h': [1, 0, 0, 1, 1]
+            }
+        ),
+        pd.DataFrame(
+            {
+                'period': pd.Series(['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'], dtype='object'),
+                'consent': pd.Series([1, 3, 4], dtype=np.int32),
+                'rider a': pd.Series([1, 3, 4], dtype=np.int32),
+                'rider b': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider c': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider d': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider e': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider f': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider g': pd.Series([1, 2, 3], dtype=np.int32),
+                'rider h': pd.Series([1, 2, 3], dtype=np.int32)
+            }
+        )
     )
 ]
 
