@@ -1,33 +1,8 @@
 import numpy as np
 import pandas as pd
 import datetime
-import requests
-import io
 from dagster import asset, op
-
-@asset
-def get_redcap_record():
-    data = {
-        'token': ,
-        'content': 'record',
-        'action': 'export',
-        'format': 'csv',
-        'type': 'flat',
-        'csvDelimiter': '',
-        'rawOrLabel': 'raw',
-        'rawOrLabelHeaders': 'raw',
-        'exportCheckboxLabel': 'false',
-        'exportSurveyFields': 'false',
-        'exportDataAccessGroups': 'false',
-        'returnFormat': 'json'
-    }
-    req = requests.post('http://ddcrc03/redcap/api/', data=data).content
-    redcap_df = pd.read_csv(
-        io.StringIO(req.decode('utf-8')),
-        sep = ","
-    )
-
-    return redcap_df
+from .resources import RedcapResource
 
 @op
 def summarize_enrolment_date(start_date, end_date, redcap_df):
@@ -68,12 +43,12 @@ def summarize_enrolment_total(start_date, end_date, delta, redcap_df):
     return df
 
 @asset
-def summarize_enrolment(get_redcap_record):
+def summarize_enrolment(redcap_api: RedcapResource):
     # initialize with the date we started consenting
     start_date = datetime.date(2023, 9, 11)
     today = datetime.date.today()
     delta = datetime.timedelta(days=7)
 
-    summarize_enrolment = summarize_enrolment_total(start_date, today, delta, get_redcap_record)
+    summarize_enrolment = summarize_enrolment_total(start_date, today, delta, redcap_api.export_records())
 
     summarize_enrolment.to_csv('data/OBRI Consent Summary.csv', index=False)
