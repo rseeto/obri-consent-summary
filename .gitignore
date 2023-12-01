@@ -1,2 +1,17 @@
 # virtual environment
+<<<<<<< Updated upstream
 .venv
+=======
+.venv
+
+# environment variables
+.env
+
+# vs code settings
+.vscode
+
+# dagster specific
+*.egg-info/
+*.pyc
+__pycache__
+>>>>>>> Stashed changes
