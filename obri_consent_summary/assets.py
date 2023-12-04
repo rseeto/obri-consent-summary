@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import datetime
 from dagster import asset, op
-from .resources import RedcapResource
+from .resources import RedcapResource, DropboxResource
 
 @op
 def summarize_enrolment_date(start_date, end_date, redcap_df):
@@ -52,3 +52,10 @@ def summarize_enrolment(redcap_api: RedcapResource):
     summarize_enrolment = summarize_enrolment_total(start_date, today, delta, redcap_api.export_records())
 
     summarize_enrolment.to_csv('data/OBRI Consent Summary.csv', index=False)
+
+@asset(deps=[summarize_enrolment])
+def upload_summary(dropbox_api: DropboxResource):
+    file_from = 'data/OBRI Consent Summary.csv'
+    file_to = '/OBRI Consent Summary/OBRI Consent Summary.csv'
+
+    dropbox_api.upload_file(file_from, file_to)

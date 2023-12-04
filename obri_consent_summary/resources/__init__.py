@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import io
 from dagster import ConfigurableResource
+import dropbox
 
 
 class RedcapResource(ConfigurableResource):
@@ -29,3 +30,13 @@ class RedcapResource(ConfigurableResource):
         )
 
         return redcap_df
+    
+class DropboxResource(ConfigurableResource):
+    dropbox_access_token: str
+
+    def upload_file(self, file_from, file_to):
+
+        dbx = dropbox.Dropbox(self.dropbox_access_token)
+
+        with open(file_from, 'rb') as f:
+            dbx.files_upload(f.read(), file_to,  mode=dropbox.files.WriteMode.overwrite)
