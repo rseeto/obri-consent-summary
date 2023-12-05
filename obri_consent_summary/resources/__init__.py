@@ -32,11 +32,17 @@ class RedcapResource(ConfigurableResource):
         return redcap_df
     
 class DropboxResource(ConfigurableResource):
-    dropbox_access_token: str
+    dropbox_key: str
+    dropbox_secret: str
+    dropbox_oauth2_refresh_token: str
 
     def upload_file(self, file_from, file_to):
 
-        dbx = dropbox.Dropbox(self.dropbox_access_token)
+        dbx = dropbox.Dropbox(
+            app_key=self.dropbox_key,
+            app_secret=self.dropbox_secret,
+            oauth2_refresh_token=self.dropbox_oauth2_refresh_token
+        )
 
         with open(file_from, 'rb') as f:
             dbx.files_upload(f.read(), file_to,  mode=dropbox.files.WriteMode.overwrite)
