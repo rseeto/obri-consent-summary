@@ -1,7 +1,4 @@
 # virtual environment
-<<<<<<< Updated upstream
-.venv
-=======
 .venv
 
 # environment variables
@@ -14,4 +11,3 @@
 *.egg-info/
 *.pyc
 __pycache__
->>>>>>> Stashed changes
