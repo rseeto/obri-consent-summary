@@ -11,3 +11,7 @@
 *.egg-info/
 *.pyc
 __pycache__
+
+# Google Drive secrets
+credentials.json
+token.json
