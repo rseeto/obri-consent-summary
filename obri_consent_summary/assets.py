@@ -106,6 +106,6 @@ def summarize_enrolment(redcap_api: RedcapResource):
 def upload_summary(gcp_api: GoogleResource):
     file_from = 'data/OBRI Consent Summary.csv'
     file_to = 'OBRI Consent Summary.csv'
-    
+
     gcp_api.get_credentials()
     gcp_api.upload_file(file_from, file_to)
