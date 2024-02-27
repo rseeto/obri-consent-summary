@@ -2,10 +2,7 @@ import requests
 import pandas as pd
 import io
 from dagster import ConfigurableResource
-import dropbox
-
 import os.path
-
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -39,22 +36,6 @@ class RedcapResource(ConfigurableResource):
 
         return redcap_df
     
-class DropboxResource(ConfigurableResource):
-    dropbox_key: str
-    dropbox_secret: str
-    dropbox_oauth2_refresh_token: str
-
-    def upload_file(self, file_from, file_to):
-
-        dbx = dropbox.Dropbox(
-            app_key=self.dropbox_key,
-            app_secret=self.dropbox_secret,
-            oauth2_refresh_token=self.dropbox_oauth2_refresh_token
-        )
-
-        with open(file_from, 'rb') as f:
-            dbx.files_upload(f.read(), file_to,  mode=dropbox.files.WriteMode.overwrite)
-
 class GoogleResource(ConfigurableResource):
     def get_credentials(self):
         """
@@ -91,13 +72,8 @@ class GoogleResource(ConfigurableResource):
 
             file_metadata = {"name": file_to}
             media = MediaFileUpload(file_from, mimetype="text/csv")
-            file = (
-                service.files()
-                .create(body=file_metadata, media_body=media, fields="id")
-                .execute()
-            )
+            service.files().create(
+                body=file_metadata, media_body=media, fields="id"
+            ).execute()
         except HttpError as error:
             print(f"An error occurred: {error}")
-            file = None
-
-        return file.get("id")
