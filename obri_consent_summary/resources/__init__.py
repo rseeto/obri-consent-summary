@@ -1,7 +1,8 @@
 import io
 import requests
 import pandas as pd
-from dagster import ConfigurableResource
+import io
+from dagster import ConfigurableResource, get_dagster_logger
 import os.path
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -84,14 +85,46 @@ class GoogleResource(ConfigurableResource):
         """
         SCOPES = 'https://www.googleapis.com/auth/drive.file'
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+        file_id = self._get_file_id(creds)
+
+        try:
+            # create drive api client
+            service = build("drive", "v3", credentials=creds)
+            media = MediaFileUpload(file_from, mimetype="text/csv")
+            
+            # If not file has previously been loaded, print link to access file
+            if file_id is None:
+                file_metadata = {"name": file_to}
+                service.files().create(
+                    body=file_metadata, media_body=media, fields="id"
+                ).execute()
+
+            else:
+                service.files().update(fileId=file_id, media_body=media).execute()
+        except HttpError as error:
+            print(f"An error occurred: {error}")
+    
+    def _get_file_id(self, creds):
+        """
+        """
         try:
             # create drive api client
             service = build("drive", "v3", credentials=creds)
 
-            file_metadata = {"name": file_to}
-            media = MediaFileUpload(file_from, mimetype="text/csv")
-            service.files().create(
-                body=file_metadata, media_body=media, fields="id"
-            ).execute()
+            # Call the Drive v3 API
+            results = (
+                service.files()
+                .list(pageSize=10, fields="nextPageToken, files(id, name)")
+                .execute()
+            )
+            items = results.get("files", [])
+
+            if not items:
+                file_id = None
+            else: 
+                file_id = items[0]['id']
+            
+            return file_id
+        
         except HttpError as error:
             print(f"An error occurred: {error}")
