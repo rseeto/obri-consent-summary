@@ -28,7 +28,7 @@ def summarize_enrolment_date(start_date, end_date, redcap_df):
 def summarize_enrolment_total(start_date, end_date, delta, redcap_df):
 
     rows_list = []
-    while (start_date <= end_date):
+    while start_date <= end_date:
         rows_list.append(
             summarize_enrolment_date(start_date, start_date+delta, redcap_df)
         )
