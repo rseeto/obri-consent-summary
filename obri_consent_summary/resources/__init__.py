@@ -87,6 +87,8 @@ class GoogleResource(ConfigurableResource):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
         file_id = self._get_file_id(creds)
 
+        get_dagster_logger().info(file_id)
+
         try:
             # create drive api client
             service = build("drive", "v3", credentials=creds)
@@ -95,14 +97,31 @@ class GoogleResource(ConfigurableResource):
             # If not file has previously been loaded, print link to access file
             if file_id is None:
                 file_metadata = {"name": file_to}
-                service.files().create(
+                file = service.files().create(
                     body=file_metadata, media_body=media, fields="id"
                 ).execute()
 
+                self._get_share_link(service, file.get("id"))
             else:
                 service.files().update(fileId=file_id, media_body=media).execute()
         except HttpError as error:
             print(f"An error occurred: {error}")
+
+    
+    def _get_share_link(self, service, file_id):
+        """
+        """
+        request_body = {
+            'role': 'reader',
+            'type': 'anyone'
+        }
+
+        service.permissions().create(
+            fileId=file_id, body=request_body
+        ).execute()
+        response_share_link = service.files().get(fileId=file_id, fields='webViewLink').execute()
+        
+        get_dagster_logger().info(response_share_link['webViewLink'])
     
     def _get_file_id(self, creds):
         """
