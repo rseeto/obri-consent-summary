@@ -49,7 +49,9 @@ def summarize_enrolment(redcap_api: RedcapResource):
     today = datetime.date.today()
     delta = datetime.timedelta(days=7)
 
-    summarize_enrolment = summarize_enrolment_total(start_date, today, delta, redcap_api.export_records())
+    summarize_enrolment = summarize_enrolment_total(
+        start_date, today, delta, redcap_api.export_records()
+    )
 
     summarize_enrolment.to_csv('data/OBRI Consent Summary.csv', index=False)
 

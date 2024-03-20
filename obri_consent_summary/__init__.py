@@ -11,7 +11,9 @@ from .resources import RedcapResource, DropboxResource
 
 all_assets = load_assets_from_modules([assets])
 
-obri_consent_summary_job = define_asset_job("obri_consent_summary_job", selection=AssetSelection.all())
+obri_consent_summary_job = define_asset_job(
+    "obri_consent_summary_job", selection=AssetSelection.all()
+)
 
 obri_consent_summary_schedule = ScheduleDefinition(
     job=obri_consent_summary_job,
