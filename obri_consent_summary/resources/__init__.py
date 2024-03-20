@@ -1,6 +1,6 @@
+import io
 import requests
 import pandas as pd
-import io
 from dagster import ConfigurableResource
 import os.path
 from google.auth.transport.requests import Request

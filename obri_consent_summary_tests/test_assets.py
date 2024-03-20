@@ -1,7 +1,7 @@
-from obri_consent_summary.assets import *
+import datetime
 import pandas as pd
 import pytest
-import datetime
+from obri_consent_summary.assets import *
 
 param_summarize_enrolment_date = [
     (
