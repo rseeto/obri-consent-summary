@@ -119,7 +119,9 @@ param_summarize_enrolment_total = [
         datetime.timedelta(days=7),
         pd.DataFrame(
             {
-                'summary_consent_date': ['2023-09-11', '2023-09-11', '2023-09-18', '2023-09-18', '2023-09-18'],
+                'summary_consent_date': [
+                    '2023-09-11', '2023-09-11', '2023-09-18', '2023-09-18', '2023-09-18'
+                ],
                 'consent_obtained': [1, 1, 1, 1, 1],
                 'summary_event_a': [1, 1, 1, 1, 1],
                 'summary_event_b': [1, 1, 0, 1, 1],
@@ -133,7 +135,10 @@ param_summarize_enrolment_total = [
         ),
         pd.DataFrame(
             {
-                'period': pd.Series(['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'], dtype='object'),
+                'period': pd.Series(
+                    ['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'],
+                    dtype='object'
+                ),
                 'consent': pd.Series([2, 3, 5], dtype=np.int32),
                 'rider a': pd.Series([2, 3, 5], dtype=np.int32),
                 'rider b': pd.Series([2, 2, 4], dtype=np.int32),
@@ -152,7 +157,9 @@ param_summarize_enrolment_total = [
         datetime.timedelta(days=7),
         pd.DataFrame(
             {
-                'summary_consent_date': ['2023-09-11', "Consent not completed", '2023-09-18', '2023-09-18', '2023-09-18'],
+                'summary_consent_date': [
+                    '2023-09-11', "Consent not completed", '2023-09-18', '2023-09-18', '2023-09-18'
+                ],
                 'consent_obtained': [1, 0, 1, 1, 1],
                 'summary_event_a': [1, 0, 1, 1, 1],
                 'summary_event_b': [1, 0, 0, 1, 1],
@@ -166,7 +173,10 @@ param_summarize_enrolment_total = [
         ),
         pd.DataFrame(
             {
-                'period': pd.Series(['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'], dtype='object'),
+                'period': pd.Series(
+                    ['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'],
+                    dtype='object'
+                ),
                 'consent': pd.Series([1, 3, 4], dtype=np.int32),
                 'rider a': pd.Series([1, 3, 4], dtype=np.int32),
                 'rider b': pd.Series([1, 2, 3], dtype=np.int32),
@@ -185,7 +195,9 @@ param_summarize_enrolment_total = [
         datetime.timedelta(days=7),
         pd.DataFrame(
             {
-                'summary_consent_date': ['2023-09-11', np.nan, '2023-09-18', '2023-09-18', '2023-09-18'],
+                'summary_consent_date': [
+                    '2023-09-11', np.nan, '2023-09-18', '2023-09-18', '2023-09-18'
+                ],
                 'consent_obtained': [1, 0, 1, 1, 1],
                 'summary_event_a': [1, 0, 1, 1, 1],
                 'summary_event_b': [1, 0, 0, 1, 1],
@@ -199,7 +211,10 @@ param_summarize_enrolment_total = [
         ),
         pd.DataFrame(
             {
-                'period': pd.Series(['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'], dtype='object'),
+                'period': pd.Series(
+                    ['2023-09-11 - 2023-09-17', '2023-09-18 - 2023-09-24', 'Total'],
+                    dtype='object'
+                ),
                 'consent': pd.Series([1, 3, 4], dtype=np.int32),
                 'rider a': pd.Series([1, 3, 4], dtype=np.int32),
                 'rider b': pd.Series([1, 2, 3], dtype=np.int32),
