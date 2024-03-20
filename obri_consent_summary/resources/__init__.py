@@ -30,7 +30,7 @@ class RedcapResource(ConfigurableResource):
         )
 
         return redcap_df
-    
+
 class DropboxResource(ConfigurableResource):
     dropbox_key: str
     dropbox_secret: str

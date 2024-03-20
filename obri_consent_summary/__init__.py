@@ -1,5 +1,5 @@
 from dagster import (
-    Definitions, 
+    Definitions,
     load_assets_from_modules,
     EnvVar,
     AssetSelection,

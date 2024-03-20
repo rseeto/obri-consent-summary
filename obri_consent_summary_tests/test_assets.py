@@ -109,7 +109,7 @@ def test_summarize_enrolment_date(
     actual = summarize_enrolment_date(
         start_date_1, end_date_1, input_df_1
     )
-    
+
     assert(actual == expected_dict_1)
 
 param_summarize_enrolment_total = [
@@ -227,5 +227,5 @@ def test_summarize_enrolment_total(
     actual = summarize_enrolment_total(
         start_date_2, end_date_2, delta_2, input_df_2
     )
-    
+
     assert(actual.equals(expected_df_2))
