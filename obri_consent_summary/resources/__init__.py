@@ -60,7 +60,7 @@ class GoogleResource(ConfigurableResource):
         """
         https://developers.google.com/drive/api/quickstart/python#configure_the_sample
         """
-        SCOPES = 'https://www.googleapis.com/auth/drive.file'
+        SCOPES = ['https://www.googleapis.com/auth/drive.file']
         creds = None
         # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
@@ -83,7 +83,7 @@ class GoogleResource(ConfigurableResource):
     def upload_file(self, file_from, file_to):
         """
         """
-        SCOPES = 'https://www.googleapis.com/auth/drive.file'
+        SCOPES = ['https://www.googleapis.com/auth/drive.file']
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
         file_id = self._get_file_id(creds)
 
