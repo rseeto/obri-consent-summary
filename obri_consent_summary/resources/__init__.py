@@ -6,9 +6,27 @@ import dropbox
 
 
 class RedcapResource(ConfigurableResource):
+    """Custom Dagster resource to interact with REDCap
+
+    Parameters
+    ----------
+    ConfigurableResource : dagster.ConfigurableResource
+        Parameter is necessary to interact with Dagster.
+
+    Notes
+    -----
+        See https://docs.dagster.io/concepts/resources for more info.
+    """
     redcap_access_token: str
 
     def export_records(self):
+        """Export records from REDCap API
+
+        Returns
+        -------
+        pandas.DataFrame
+            Returns a all exported records from REDCap in a DataFrame.
+        """
         data = {
             'token': self.redcap_access_token,
             'content': 'record',
@@ -32,11 +50,31 @@ class RedcapResource(ConfigurableResource):
         return redcap_df
 
 class DropboxResource(ConfigurableResource):
+    """Custom Dagster resource to interact with Dropbox
+
+    Parameters
+    ----------
+    ConfigurableResource : dagster.ConfigurableResource
+        Parameter is necessary to interact with Dagster.
+
+    Notes
+    -----
+        See https://docs.dagster.io/concepts/resources for more info.
+    """
     dropbox_key: str
     dropbox_secret: str
     dropbox_oauth2_refresh_token: str
 
     def upload_file(self, file_from, file_to):
+        """Upload the local report to cloud based storage
+
+        Parameters
+        ----------
+        file_from : str
+            Relative local file path of report
+        file_to : str
+            Cloud based path of saved report
+        """
 
         dbx = dropbox.Dropbox(
             app_key=self.dropbox_key,
