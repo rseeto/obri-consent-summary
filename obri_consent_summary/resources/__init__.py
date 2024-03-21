@@ -11,9 +11,27 @@ from googleapiclient.http import MediaFileUpload
 from googleapiclient.errors import HttpError
 
 class RedcapResource(ConfigurableResource):
+    """Custom Dagster resource to interact with REDCap
+
+    Parameters
+    ----------
+    ConfigurableResource : dagster.ConfigurableResource
+        Parameter is necessary to interact with Dagster.
+
+    Notes
+    -----
+        See https://docs.dagster.io/concepts/resources for more info.
+    """
     redcap_access_token: str
 
     def export_records(self):
+        """Export records from REDCap API
+
+        Returns
+        -------
+        pandas.DataFrame
+            Returns a all exported records from REDCap in a DataFrame.
+        """
         data = {
             'token': self.redcap_access_token,
             'content': 'record',
