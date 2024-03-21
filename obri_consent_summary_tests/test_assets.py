@@ -1,7 +1,8 @@
 import datetime
 import pandas as pd
 import pytest
-from obri_consent_summary.assets import *
+import numpy as np
+from obri_consent_summary.assets import summarize_enrolment_date, summarize_enrolment_total
 
 param_summarize_enrolment_date = [
     (
