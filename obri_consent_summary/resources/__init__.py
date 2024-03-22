@@ -94,7 +94,7 @@ class GoogleResource(ConfigurableResource):
             service = build("drive", "v3", credentials=creds)
             media = MediaFileUpload(file_from, mimetype="text/csv")
             
-            # If not file has previously been loaded, print link to access file
+            # If not file has previously been loaded, log link to access file
             if file_id is None:
                 file_metadata = {"name": file_to}
                 file = service.files().create(
@@ -105,7 +105,7 @@ class GoogleResource(ConfigurableResource):
             else:
                 service.files().update(fileId=file_id, media_body=media).execute()
         except HttpError as error:
-            print(f"An error occurred: {error}")
+            get_dagster_logger().info(f"An error occurred: {error}")
 
     
     def _get_share_link(self, service, file_id):
@@ -146,4 +146,4 @@ class GoogleResource(ConfigurableResource):
             return file_id
         
         except HttpError as error:
-            print(f"An error occurred: {error}")
+            get_dagster_logger().info(f"An error occurred: {error}")
