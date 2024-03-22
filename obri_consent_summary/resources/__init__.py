@@ -53,7 +53,7 @@ class RedcapResource(ConfigurableResource):
         )
 
         return redcap_df
-    
+
 class GoogleResource(ConfigurableResource):
     def get_credentials(self):
         """
@@ -92,7 +92,7 @@ class GoogleResource(ConfigurableResource):
             # create drive api client
             service = build("drive", "v3", credentials=creds)
             media = MediaFileUpload(file_from, mimetype="text/csv")
-            
+
             # If not file has previously been loaded, log link to access file
             if file_id is None:
                 file_metadata = {"name": file_to}
@@ -106,7 +106,6 @@ class GoogleResource(ConfigurableResource):
         except HttpError as error:
             get_dagster_logger().info(f"An error occurred: {error}")
 
-    
     def _get_share_link(self, service, file_id):
         """
         """
@@ -119,9 +118,9 @@ class GoogleResource(ConfigurableResource):
             fileId=file_id, body=request_body
         ).execute()
         response_share_link = service.files().get(fileId=file_id, fields='webViewLink').execute()
-        
+
         get_dagster_logger().info(response_share_link['webViewLink'])
-    
+
     def _get_file_id(self, creds):
         """
         """
@@ -139,10 +138,10 @@ class GoogleResource(ConfigurableResource):
 
             if not items:
                 file_id = None
-            else: 
+            else:
                 file_id = items[0]['id']
-            
+
             return file_id
-        
+
         except HttpError as error:
             get_dagster_logger().info(f"An error occurred: {error}")
