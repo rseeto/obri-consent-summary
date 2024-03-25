@@ -55,9 +55,31 @@ class RedcapResource(ConfigurableResource):
         return redcap_df
 
 class GoogleResource(ConfigurableResource):
+    """Custom Dagster resource to interact with Google Cloud Platform
+
+    Parameters
+    ----------
+    ConfigurableResource : dagster.ConfigurableResource
+        Parameter is necessary to interact with Dagster.
+
+    Notes
+    -----
+        See https://docs.dagster.io/concepts/resources for more info.
+    """
+
     def get_credentials(self):
-        """
-        https://developers.google.com/drive/api/quickstart/python#configure_the_sample
+        """Get or update Google Cloud Platform credentials
+
+        Creates or updates the token.json file using info from credentials.json
+
+        Notes
+        -----
+            If token.json is not accessible, user will be prompted to enter authentification 
+            details one time.
+
+            Assumes the credentials.json file is accessible. See 
+            https://developers.google.com/drive/api/quickstart/python#configure_the_sample
+            and the readme for more info. 
         """
         SCOPES = ['https://www.googleapis.com/auth/drive.file']
         creds = None
@@ -80,7 +102,14 @@ class GoogleResource(ConfigurableResource):
                 token.write(creds.to_json())
 
     def upload_file(self, file_from, file_to):
-        """
+        """Upload the local report to cloud based storage
+
+        Parameters
+        ----------
+        file_from : str
+            Relative local file path of report
+        file_to : str
+            Cloud based path of saved report
         """
         SCOPES = ['https://www.googleapis.com/auth/drive.file']
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -107,7 +136,14 @@ class GoogleResource(ConfigurableResource):
             get_dagster_logger().info(f"An error occurred: {error}")
 
     def _get_share_link(self, service, file_id):
-        """
+        """Logs the web link associated with uploaded file
+
+        Parameters
+        ----------
+        service : Resource
+            Constructed resource to interact with drive API
+        file_id : str
+            ID of the uploaded file
         """
         request_body = {
             'role': 'reader',
@@ -122,7 +158,17 @@ class GoogleResource(ConfigurableResource):
         get_dagster_logger().info(response_share_link['webViewLink'])
 
     def _get_file_id(self, creds):
-        """
+        """Get file ID of the previously uploaded file
+
+        Parameters
+        ----------
+        creds : Credentials
+            Credentials using OAuth 2.0 to interact with Google Cloud Platform
+
+        Returns
+        -------
+        str/None
+            ID of the uploaded file. Will return None if no previous upload
         """
         try:
             # create drive api client
