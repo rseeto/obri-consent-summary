@@ -30,7 +30,7 @@ class RedcapResource(ConfigurableResource):
         Returns
         -------
         pandas.DataFrame
-            Returns a all exported records from REDCap in a DataFrame.
+            Returns all exported records from REDCap in a DataFrame.
         """
         data = {
             'token': self.redcap_access_token,
