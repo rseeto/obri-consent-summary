@@ -51,12 +51,12 @@ To obtain a REDCap API token, you can follow the instructions provided by [Arcus
 
 Once the REDCap API is obtained, it can be saved as the environment variable `REDCAP_ACCESS_TOKEN` in the `.env` file (e.g. `REDCAP_ACCESS_TOKEN="ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"`).
 
-## Configuration: Dropbox API
-To obtain a Dropbox API key and secret, you can folow the instructions provided by the [Dropbox tutorial](https://www.dropbox.com/developers/documentation/python#tutorial).
+## Configuration: Google Cloud Platform API
+To obtain a Google Cloud Platform credentials, you can folow the instructions provided by the [Google Cloud Platform quickstart](https://developers.google.com/drive/api/quickstart/python).
 
-Dropbox no recommends creating a long-lived token with no expiration. Instead, they suggest creating a short-lived token with a refresh token which requires the key and secret obtained in the previous step. I found the following [Stack Overflow post](https://stackoverflow.com/questions/70641660/how-do-you-get-and-use-a-refresh-token-for-the-dropbox-api-python-3-x) helpful in obtaining a refresh token. The official documentation for our use case is available [here](https://dropbox-sdk-python.readthedocs.io/en/latest/api/oauth.html#dropbox.oauth.DropboxOAuth2FlowNoRedirect).
+For this project, the Google Drive API is necessary as it allows us to upload our file to Google Drive. The Google Drive [API needs to be enable](https://developers.google.com/drive/api/quickstart/python#enable_the_api). Google Cloud uses OAuth 2.0 to authenticate instead of API keys. To obtain credentials, it is necessary to [add yourself as a user to this project](https://developers.google.com/drive/api/quickstart/python#configure_the_oauth_consent_screen) and finally [authorize credentials for a desktop application](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application). Once the previous steps are completed, you should have access to a `credentials.json` file which will need to be placed at the top level of the project folder.
 
-Once the Dropbox API is obtained, it can be saved as the environment variables `DROPBOX_KEY`, `DROPBOX_SECRET`, and `DROPBOX_OAUTH2_REFRESH_TOKEN` in the `.env` file.
+Please note, you will eventually need to change the [application publication status to "In Production"](https://support.google.com/cloud/answer/10311615#publishing-status&zippy=). If the "Publishing Status" is left as "Testing", authentification will be required every 7 days which will cause issues with the current scheduling configuration.
 
 ## Configuration: Scheduling
 The Dagster pipeline is scheduled to execute once a week on Monday. To modify the execution schedule, revised the `cron_schedule` argument in `obri_consent_summary\__init__.py` using [cron syntax](https://docs.dagster.io/concepts/partitions-schedules-sensors/schedules#basic-schedules).

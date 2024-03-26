@@ -1,9 +1,14 @@
 import io
+import os.path
 import requests
 import pandas as pd
-from dagster import ConfigurableResource
-import dropbox
-
+from dagster import ConfigurableResource, get_dagster_logger
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+from googleapiclient.errors import HttpError
 
 class RedcapResource(ConfigurableResource):
     """Custom Dagster resource to interact with REDCap
@@ -25,7 +30,7 @@ class RedcapResource(ConfigurableResource):
         Returns
         -------
         pandas.DataFrame
-            Returns a all exported records from REDCap in a DataFrame.
+            Returns all exported records from REDCap in a DataFrame.
         """
         data = {
             'token': self.redcap_access_token,
@@ -49,8 +54,8 @@ class RedcapResource(ConfigurableResource):
 
         return redcap_df
 
-class DropboxResource(ConfigurableResource):
-    """Custom Dagster resource to interact with Dropbox
+class GoogleResource(ConfigurableResource):
+    """Custom Dagster resource to interact with Google Cloud Platform
 
     Parameters
     ----------
@@ -61,9 +66,40 @@ class DropboxResource(ConfigurableResource):
     -----
         See https://docs.dagster.io/concepts/resources for more info.
     """
-    dropbox_key: str
-    dropbox_secret: str
-    dropbox_oauth2_refresh_token: str
+
+    def get_credentials(self):
+        """Get or update Google Cloud Platform credentials
+
+        Creates or updates the token.json file using info from credentials.json
+
+        Notes
+        -----
+            If token.json is not accessible, user will be prompted to enter authentification 
+            details one time.
+
+            Assumes the credentials.json file is accessible. See 
+            https://developers.google.com/drive/api/quickstart/python#configure_the_sample
+            and the readme for more info. 
+        """
+        SCOPES = ['https://www.googleapis.com/auth/drive.file']
+        creds = None
+        # The file token.json stores the user's access and refresh tokens, and is
+        # created automatically when the authorization flow completes for the first
+        # time.
+        if os.path.exists("token.json"):
+            creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+        # If there are no (valid) credentials available, let the user log in.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    "credentials.json", SCOPES
+                )
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open("token.json", "w") as token:
+                token.write(creds.to_json())
 
     def upload_file(self, file_from, file_to):
         """Upload the local report to cloud based storage
@@ -75,12 +111,83 @@ class DropboxResource(ConfigurableResource):
         file_to : str
             Cloud based path of saved report
         """
+        SCOPES = ['https://www.googleapis.com/auth/drive.file']
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+        file_id = self._get_file_id(creds)
 
-        dbx = dropbox.Dropbox(
-            app_key=self.dropbox_key,
-            app_secret=self.dropbox_secret,
-            oauth2_refresh_token=self.dropbox_oauth2_refresh_token
-        )
+        get_dagster_logger().info(file_id)
 
-        with open(file_from, 'rb') as f:
-            dbx.files_upload(f.read(), file_to,  mode=dropbox.files.WriteMode.overwrite)
+        try:
+            # create drive api client
+            service = build("drive", "v3", credentials=creds)
+            media = MediaFileUpload(file_from, mimetype="text/csv")
+
+            # If not file has previously been loaded, log link to access file
+            if file_id is None:
+                file_metadata = {"name": file_to}
+                file = service.files().create(
+                    body=file_metadata, media_body=media, fields="id"
+                ).execute()
+
+                self._get_share_link(service, file.get("id"))
+            else:
+                service.files().update(fileId=file_id, media_body=media).execute()
+        except HttpError as error:
+            get_dagster_logger().info(f"An error occurred: {error}")
+
+    def _get_share_link(self, service, file_id):
+        """Logs the web link associated with uploaded file
+
+        Parameters
+        ----------
+        service : Resource
+            Constructed resource to interact with drive API
+        file_id : str
+            ID of the uploaded file
+        """
+        request_body = {
+            'role': 'reader',
+            'type': 'anyone'
+        }
+
+        service.permissions().create(
+            fileId=file_id, body=request_body
+        ).execute()
+        response_share_link = service.files().get(fileId=file_id, fields='webViewLink').execute()
+
+        get_dagster_logger().info(response_share_link['webViewLink'])
+
+    def _get_file_id(self, creds):
+        """Get file ID of the previously uploaded file
+
+        Parameters
+        ----------
+        creds : Credentials
+            Credentials using OAuth 2.0 to interact with Google Cloud Platform
+
+        Returns
+        -------
+        str/None
+            ID of the uploaded file. Will return None if no previous upload
+        """
+        try:
+            # create drive api client
+            service = build("drive", "v3", credentials=creds)
+
+            # Call the Drive v3 API
+            results = (
+                service.files()
+                .list(pageSize=10, fields="nextPageToken, files(id, name)")
+                .execute()
+            )
+            items = results.get("files", [])
+
+            if not items:
+                file_id = None
+            else:
+                file_id = items[0]['id']
+
+            return file_id
+
+        except HttpError as error:
+            get_dagster_logger().info(f"An error occurred: {error}")

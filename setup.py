@@ -11,7 +11,9 @@ setup(
         "datetime",
         "numpy",
         "pandas",
-        "dropbox"
+        "google-api-python-client",
+        "google-auth-httplib2",
+        "google-auth-oauthlib"
     ],
     extras_require={"dev": ["dagster-webserver", "pytest"]},
 )

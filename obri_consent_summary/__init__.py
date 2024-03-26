@@ -7,7 +7,7 @@ from dagster import (
     ScheduleDefinition
 )
 from . import assets
-from .resources import RedcapResource, DropboxResource
+from .resources import RedcapResource, GoogleResource
 
 all_assets = load_assets_from_modules([assets])
 
@@ -24,11 +24,7 @@ defs = Definitions(
     assets=all_assets,
     resources={
         "redcap_api": RedcapResource(redcap_access_token=EnvVar("REDCAP_ACCESS_TOKEN")),
-        "dropbox_api": DropboxResource(
-            dropbox_key=EnvVar("DROPBOX_KEY"),
-            dropbox_secret=EnvVar("DROPBOX_SECRET"),
-            dropbox_oauth2_refresh_token=EnvVar("DROPBOX_OAUTH2_REFRESH_TOKEN")
-        )
+        "gcp_api": GoogleResource()
     },
     schedules=[obri_consent_summary_schedule]
 )
