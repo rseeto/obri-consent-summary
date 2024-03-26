@@ -104,6 +104,13 @@ def summarize_enrolment(redcap_api: RedcapResource):
 
 @asset(deps=[summarize_enrolment])
 def upload_summary(gcp_api: GoogleResource):
+    """Upload the local report to cloud based storage
+
+    Parameters
+    ----------
+    gcp_api : GoogleResource
+        Dagster configurable resource to interact with Google Cloud Platform
+    """
     file_from = 'data/OBRI Consent Summary.csv'
     file_to = 'OBRI Consent Summary.csv'
 
