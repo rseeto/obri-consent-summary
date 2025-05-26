@@ -1,13 +1,13 @@
 # OBRI-IBD: Consent Summary Pipeline
 ## Description
-This is a [Dagster](https://dagster.io/) pipeline which extracts consent data from the [REDCap](https://www.project-redcap.org/), creates a summary, and uploads it to a Dropbox folder. It is assumed this project will be run on a Windows server which is reflected in the instructions.
+This is a [Dagster](https://dagster.io/) pipeline which extracts consent data from the [REDCap](https://www.project-redcap.org/), creates a summary, and uploads it to a Google Cloud Platform folder. It is assumed this project will be run on a Windows server which is reflected in the instructions.
 
 ## Technologies
 Project is created with:
 * Dagster
 * REDCap API
 * Python
-* Dropbox
+* Google Cloud Platform
 
 ## Installation: Download repository
 To run this program, this repository must be cloned or downloaded. The GitHub provided instructions on how to do this are available at [https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository.](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
@@ -44,7 +44,7 @@ pip install -e ".[dev]"
 The `-e` flag indicates an [editable install](https://pip.pypa.io/en/latest/topics/local-project-installs/#editable-installs).
 
 ## Configuration
-This pipeline accesses REDCap and Dropbox using their respective APIs. It is best practice to not hard-code credentials. Instead, it is recommended to create environment variables to supply the sensitive details. As [recommended by Dagster](https://docs.dagster.io/guides/dagster/using-environment-variables-and-secrets#local-development), this project uses an `.env` file to store sensitive information.
+This pipeline accesses REDCap and Google Cloud Platform using their respective APIs. It is best practice to not hard-code credentials. Instead, it is recommended to create environment variables to supply the sensitive details. As [recommended by Dagster](https://docs.dagster.io/guides/dagster/using-environment-variables-and-secrets#local-development), this project uses an `.env` file to store sensitive information.
 
 ## Configuration: REDCap API
 To obtain a REDCap API token, you can follow the instructions provided by [Arcus](https://education.arcus.chop.edu/redcap-api/).
